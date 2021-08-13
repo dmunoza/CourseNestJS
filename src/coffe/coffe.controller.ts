@@ -1,5 +1,7 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Query, Res } from '@nestjs/common';
 import { CoffeService } from './coffe.service'
+import { CreateCoffeeDto } from './dto/create-coffee.dto';
+import { UpdateCoffeeDto } from './dto/update-coffee.dto';
 
 @Controller('coffe')
 export class CoffeController {
@@ -20,12 +22,12 @@ export class CoffeController {
     }
     @Post()
     @HttpCode(HttpStatus.CONFLICT) //send status return
-    create(@Body() body){ // add property i need show, example: 'name' and body returns only name
-        return this.coffeService.create(body);
+    create(@Body() createCoffeeDto: CreateCoffeeDto){ // add property i need show, example: 'name' and body returns only name
+        return this.coffeService.create(createCoffeeDto);
     }
     @Patch(':id')
-    update(@Param('id') id: string, @Body() body){
-        return this.coffeService.update(id, body)
+    update(@Param('id') id: string, @Body() updateCoffeeDto: UpdateCoffeeDto){
+        return this.coffeService.update(id, updateCoffeeDto)
     }
     
     @Delete(':id')
