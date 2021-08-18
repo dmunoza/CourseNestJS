@@ -8,7 +8,7 @@ export class CoffeController {
     constructor(private readonly coffeService: CoffeService) {}
 
     @Get()
-    findAll(@Res() response){
+    findAll(){
         return this.coffeService.findAll();
     }
     @Get('pagination')
@@ -21,7 +21,7 @@ export class CoffeController {
         return this.coffeService.findOne(id);
     }
     @Post()
-    @HttpCode(HttpStatus.CONFLICT) //send status return
+    //@HttpCode(HttpStatus.CONFLICT) //send status return
     create(@Body() createCoffeeDto: CreateCoffeeDto){ // add property i need show, example: 'name' and body returns only name
         return this.coffeService.create(createCoffeeDto);
     }
