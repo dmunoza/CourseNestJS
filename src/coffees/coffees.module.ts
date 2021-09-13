@@ -5,11 +5,8 @@ import { CoffeService } from 'src/coffe/coffe.service';
 import { Coffee } from 'src/coffe/entities/coffe.entity';
 import { Flavor } from 'src/coffe/entities/flavor.entity';
 import { COFFEE_BRANDS } from 'src/coffees.constants';
-import {Event} from '../events/entities/event.entity'
-
-class ConfigService{}
-class DevelopmentConfigService{}
-class ProductionConfigService{}
+import { Connection } from 'typeorm';
+import {Event} from '../events/entities/event.entity';
 
 @Injectable()
 export class CoffeeBrandsFactory{
@@ -23,15 +20,15 @@ export class CoffeeBrandsFactory{
     controllers: [CoffeController], 
     providers: [
         CoffeService,
-        CoffeeBrandsFactory,
-        {
-            provide: ConfigService,
-            useClass: process.env.NODE_ENV === 'development' ? DevelopmentConfigService : ProductionConfigService,
-        },
         {
             provide: COFFEE_BRANDS, // se ocupa como token, permite validar desde coffeservice la clase que se ocupara.
-            useFactory: (brandsFactory: CoffeeBrandsFactory) => brandsFactory.create(),
-            inject: [CoffeeBrandsFactory],
+            useFactory: async (connection: Connection): Promise<string[]> => {
+                // const coffeeBrands = await connection.query('SELECT * ...');
+                const coffeeBrands = await Promise.resolve(['buddy brew', 'nescafe']);
+                console.log('[!] Async Factory')
+                return coffeeBrands
+            },
+            inject: [Connection],
         },
     ],
     exports: [CoffeService]
