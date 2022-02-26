@@ -1,4 +1,5 @@
 import { flatten, Injectable, Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CoffeController } from 'src/coffe/coffe.controller';
 import { CoffeService } from 'src/coffe/coffe.service';
@@ -16,7 +17,7 @@ export class CoffeeBrandsFactory{
 }
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Coffee, Flavor, Event])],
+    imports: [TypeOrmModule.forFeature([Coffee, Flavor, Event]), ConfigModule],
     controllers: [CoffeController], 
     providers: [
         CoffeService,
