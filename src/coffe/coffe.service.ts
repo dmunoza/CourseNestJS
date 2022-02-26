@@ -7,7 +7,8 @@ import { UpdateCoffeeDto } from './dto/update-coffee.dto';
 import { Coffee } from './entities/coffe.entity';
 import { Flavor } from './entities/flavor.entity';
 import {Event} from '../events/entities/event.entity'
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule, ConfigService, ConfigType } from '@nestjs/config';
+import coffeesConfig from './config/coffees.config';
 
 @Injectable()
 export class CoffeService {
@@ -18,9 +19,10 @@ export class CoffeService {
         private readonly flavorRepository: Repository<Flavor>,
         private readonly connection: Connection,
         private readonly configService: ConfigService,
+        @Inject(coffeesConfig.KEY)
+        private coffeesConfiguration: ConfigType<typeof coffeesConfig>, 
     ){
-        const databaseHost = this.configService.get<string>('DATABASE_HOST');
-        console.log(databaseHost);
+        console.log(coffeesConfiguration.foo); 
     }
 
     findAll(){
