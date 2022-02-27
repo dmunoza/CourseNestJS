@@ -1,6 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
 async function bootstrap() {
   
@@ -13,6 +14,7 @@ async function bootstrap() {
       enableImplicitConversion: true,
     }
   }));
+  app.useGlobalFilters(new HttpExceptionFilter()); // manage all exception in the project
   await app.listen(3000);
 }
 bootstrap();
