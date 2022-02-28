@@ -7,7 +7,7 @@ import { UpdateCoffeeDto } from './dto/update-coffee.dto';
 import { Coffee } from './entities/coffe.entity';
 import { Flavor } from './entities/flavor.entity';
 import {Event} from '../events/entities/event.entity'
-import { ConfigModule, ConfigService, ConfigType } from '@nestjs/config';
+import { ConfigService, ConfigType } from '@nestjs/config';
 import coffeesConfig from './config/coffees.config';
 
 @Injectable()
@@ -21,9 +21,7 @@ export class CoffeService {
         private readonly configService: ConfigService,
         @Inject(coffeesConfig.KEY)
         private coffeesConfiguration: ConfigType<typeof coffeesConfig>, 
-    ){
-        console.log(coffeesConfiguration.foo); 
-    }
+    ){}
 
     findAll(){
         return this.coffeRepository.find({
@@ -39,7 +37,7 @@ export class CoffeService {
         });
     }
 
-    async findOne(id: string){
+    async findOne(id: number){
         const coffe = await this.coffeRepository.findOne(id, {
             relations: ['flavors']
         })
@@ -60,7 +58,7 @@ export class CoffeService {
         return this.coffeRepository.save(coffe);
     }
 
-    async update(id: string, updateCoffeeDto: UpdateCoffeeDto){
+    async update(id: number, updateCoffeeDto: UpdateCoffeeDto){
         const flavors = updateCoffeeDto.flavors && (await Promise.all(
             updateCoffeeDto.flavors.map(name => this.preloadFlavorByName(name)),
         ))    
@@ -75,7 +73,7 @@ export class CoffeService {
         return this.coffeRepository.save(coffe)
     }
 
-    async remove(id: string){
+    async remove(id: number){
         const coffe = await this.findOne(id)
         return this.coffeRepository.remove(coffe)
     }

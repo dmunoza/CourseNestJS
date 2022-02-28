@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Query, Res } from '@nestjs/common';
-import { Public } from 'src/common/decorators/public.decorator';
+import { Public } from '../common/decorators/public.decorator';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
+import { ParseIntPipe } from 'src/common/pipes/parse-int.pipe';
 import { CoffeService } from './coffe.service'
 import { CreateCoffeeDto } from './dto/create-coffee.dto';
 import { UpdateCoffeeDto } from './dto/update-coffee.dto';
@@ -11,7 +12,8 @@ export class CoffeController {
 
     @Public() //indicate this endpoint is public to validate in guard
     @Get()
-    findAll(){
+    async findAll(){
+        await new Promise(resolve => setTimeout(resolve, 5000));
         return this.coffeService.findAll();
     }
     @Get('pagination')
@@ -19,7 +21,8 @@ export class CoffeController {
         return this.coffeService.findAllPagination(paginationQuery);
     }
     @Get(':id')
-    findOne(@Param('id') id: string){
+    findOne(@Param('id', ParseIntPipe) id: number){
+        console.log(id)
         return this.coffeService.findOne(id);
     }
     @Post()
@@ -28,12 +31,12 @@ export class CoffeController {
         return this.coffeService.create(createCoffeeDto);
     }
     @Patch(':id')
-    update(@Param('id') id: string, @Body() updateCoffeeDto: UpdateCoffeeDto){
+    update(@Param('id') id: number, @Body() updateCoffeeDto: UpdateCoffeeDto){
         return this.coffeService.update(id, updateCoffeeDto)
     }
     
     @Delete(':id')
-    remove(@Param('id') id: string){
+    remove(@Param('id') id: number){
         return this.coffeService.remove(id)
     }
 }
